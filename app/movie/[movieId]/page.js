@@ -114,7 +114,7 @@ const Page = (props) => {
           </div>
         </div>
       </div>
-      <div ref={video} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50 hidden">
+      <div ref={video} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50 ">
         <div className="relative w-full h-0 pb-9/16">
           {/* Rest of the code for the video player */}
         </div>
