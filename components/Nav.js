@@ -1,140 +1,83 @@
-"use client"
-import { useState } from "react";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { changePage } from "@/store/Reducers/movieReducer";
+import { BiPlusMedical } from "react-icons/bi";
+import { TbMessageLanguage } from "react-icons/tb";
+import { ImSearch } from "react-icons/im";
 
 const Nav = () => {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [tvDropdown, setTvDropdown] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Popular");
-  const dispatch = useDispatch();
 
-  const handleDropdownToggle = () => {
-    setShowDropdown((prevState) => !prevState);
-    setTvDropdown(false);
-  };
-
-  const handletvDropdownToggle = () => {
-    setTvDropdown((prevState) => !prevState);
-    setShowDropdown(false);
-  };
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-    setShowDropdown(false); // Close the dropdown after selecting an option
-  };
-
-  const handletvOptionChange = (event) => {
-    // setSelectedOption(event.target.value);
-    setTvDropdown(false); // Close the dropdown after selecting an option
-  };
-
-  const pageHandler = () => {
-    dispatch(changePage(1));
-  };
 
   return (
-    <div className="bg-gray-800 py-4 px-6 relative">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+    <div className="bg-[#032541] py-4 px-6 relative">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
+        <div className="flex items-center gap-6 mb-4 md:mb-0">
           <Link href="/">
             <img
               src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
               alt=""
-              className="h-10 w-10 cursor-pointer"
+              className="h-10 w-36 cursor-pointer"
             />
           </Link>
           <div className="relative group">
             <p
-              onClick={handleDropdownToggle}
-              className="cursor-pointer hover:text-white text-gray-300"
+              className="cursor-pointer hover:text-white text-white font-semibold"
             >
               Movies
             </p>
-            {showDropdown && (
-              <div className="z-10 absolute top-10 left-0 bg-gray-700 text-white py-2 px-4 space-y-2">
-                <Link
-                  onClick={pageHandler}
-                  href="/popular"
-                  value="Popular"
-                  className="block hover:text-blue-500"
-                >
-                  Popular
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/now_playing"
-                  value="Now Playing"
-                  className="block hover:text-blue-500"
-                >
-                  Now Playing
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/upcoming"
-                  value="Upcoming"
-                  className="block hover:text-blue-500"
-                >
-                  Upcoming
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/top_rated"
-                  value="Top Rated"
-                  className="block hover:text-blue-500"
-                >
-                  Top Rated
-                </Link>
-              </div>
-            )}
+            <div className="z-10 absolute rounded-sm w-max top-10 left-0 bg-white text-black py-2 px-4 space-y-2 opacity-0 group-hover:opacity-100">
+              <Link href="/popular" className="block hover:text-blue-500">
+                Popular
+              </Link>
+              <Link href="/now_playing" className="block hover:text-blue-500">
+                Now Playing
+              </Link>
+              <Link href="/upcoming" className="block hover:text-blue-500">
+                Upcoming
+              </Link>
+              <Link href="/top_rated" className="block hover:text-blue-500">
+                Top Rated
+              </Link>
+            </div>
           </div>
           <div className="z-10 relative group">
             <p
-              onClick={handletvDropdownToggle}
-              className="cursor-pointer hover:text-white text-gray-300"
+              className="cursor-pointer hover:text-white text-white font-semibold"
             >
               TV Shows
             </p>
-            {tvDropdown && (
-              <div className="absolute top-10 left-0 bg-gray-700 text-white py-2 px-4 space-y-2">
-                <Link
-                  onClick={pageHandler}
-                  href="/tv/popular"
-                  value="Popular"
-                  className="block hover:text-blue-500"
-                >
-                  Popular
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/tv/airing_today"
-                  value="Now Playing"
-                  className="block hover:text-blue-500"
-                >
-                  Airing Today
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/tv/on_the_air"
-                  value="Upcoming"
-                  className="block hover:text-blue-500"
-                >
-                  On TV
-                </Link>
-                <Link
-                  onClick={pageHandler}
-                  href="/tv/top_rated"
-                  value="Top Rated"
-                  className="block hover:text-blue-500"
-                >
-                  Top Rated
-                </Link>
-              </div>
-            )}
+            <div className="z-10 absolute top-10 left-0 bg-white text-black w-max rounded-sm py-2 px-4 space-y-2 opacity-0 group-hover:opacity-100">
+              <Link href="/tv/popular" className="block hover:text-blue-500">
+                Popular
+              </Link>
+              <Link href="/tv/airing_today" className="block hover:text-blue-500">
+                Airing Today
+              </Link>
+              <Link href="/tv/on_the_air" className="block hover:text-blue-500">
+                On TV
+              </Link>
+              <Link href="/tv/top_rated" className="block hover:text-blue-500">
+                Top Rated
+              </Link>
+            </div>
           </div>
-          <p className="cursor-pointer hover:text-white text-gray-300">People</p>
-          <p className="cursor-pointer hover:text-white text-gray-300">More</p>
+          <p className="cursor-pointer hidden md:flex lg:flex hover:text-white text-white font-semibold">
+            People
+          </p>
+          <p className="cursor-pointer hidden md:flex lg:flex hover:text-white text-white font-semibold">
+            More
+          </p>
+        </div>
+        <div className=" hidden  items-center gap-6 text-white font-semibold md:flex lg:flex">
+          <p>
+            <BiPlusMedical className="font-bold" style={{ color: 'white', fontSize: '20px' }} />
+          </p>
+          <p>
+            <TbMessageLanguage className="font-bold" style={{ color: 'white', fontSize: '25px' }} />
+          </p>
+          <p>Login</p>
+          <p>Join TMDB</p>
+          <Link href={'/'}>
+            <ImSearch className="font-bold" style={{ color: '#01B4E4', fontSize: '20px' }} />
+          </Link>
         </div>
       </div>
     </div>

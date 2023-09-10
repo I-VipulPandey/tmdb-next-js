@@ -3,14 +3,15 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncGetTvShowsDetails } from "@/store/Actions/tvShowsAction";
-
+import { BiListUl } from "react-icons/bi";
+import { AiOutlineHeart } from "react-icons/ai";
+import { BsBookmark } from "react-icons/bs";
+import { AiOutlineStar } from "react-icons/ai";
+import {RxCross2} from "react-icons/rx";
 const Page = (props) => {
-  const [crew, setcrew] = useState([]);
   const [cast, setcast] = useState([]);
-
   const video = useRef(null);
   const iframeVideo = useRef(null);
-
   const { showId } = props.params;
   const { TvShowsDetails } = useSelector((state) => state.tvShowReducer);
   const trailer = TvShowsDetails.videos?.results.find(
@@ -20,104 +21,148 @@ const Page = (props) => {
 
   useEffect(() => {
     dispatch(asyncGetTvShowsDetails(showId));
-    castNcrew();
+    showcast();
   }, []);
 
-  const imgErrorHandler = (e) => {
-    e.target.style.display = "none";
+  console.log(TvShowsDetails);
+  const trailerOpenHandler = () => {
+    video.current.style.display = "flex";
+    iframeVideo.current.src = `https://www.youtube.com/embed/${trailer?.key}`;
   };
 
-  // crew and cast data
+  const trailerCloseHandler = () => {
+    video.current.style.display = "none";
+    iframeVideo.current.src = " ";
+  };
 
-  const castNcrew = async () => {
+  const errorHandler = () => {
+    iframeVideo.current.style.display = "none";
+  };
+
+  const showcast = async () => {
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/tv/${showId}/credits?api_key=11eafabab15fc91d50417227c788a542`
     );
-    setcrew(data.crew.filter((crew) => crew.known_for_department === "Creator"));
     setcast(data.cast);
   };
-
   return (
     <>
     <div
-      className="bg-cover bg-center bg-no-repeat relative"
+      className="relative bg-cover bg-center h-1/2 md:h-screen"
       style={{
-        backgroundImage: `url(https://image.tmdb.org/t/p/original/${TvShowsDetails.backdrop_path}?api_key=11eafabab15fc91d50417227c788a542)`,
+        backgroundImage: `url('https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${TvShowsDetails.backdrop_path}?api_key=11eafabab15fc91d50417227c788a542')`,
       }}
     >
-      <div className="bg-black bg-opacity-75 text-white py-8 px-4 md:py-16 md:px-24 lg:px-32 xl:px-48 relative">
-        <div className="container mx-auto flex flex-col lg:flex-row">
-          <div className="lg:w-1/3">
+      <div className="bg-black bg-opacity-70 text-white flex items-center justify-center px-5 md:px-10 h-1/2 md:h-screen">
+        <div className="container mx-auto flex flex-col md:flex-row gap-4">
+          <div className="pt-2 w-2/4 md:w-1/2 lg:w-1/4">
             <img
-              src={`https://image.tmdb.org/t/p/w500/${TvShowsDetails.poster_path}?api_key=11eafabab15fc91d50417227c788a542`}
+              src={`https://image.tmdb.org/t/p/w500//${TvShowsDetails.poster_path}?api_key=11eafabab15fc91d50417227c788a542`}
               alt=""
-              className="w-full rounded-lg shadow-md"
-              onError={imgErrorHandler}
+              className="w-full h-auto rounded-lg"
             />
           </div>
-          <div className="lg:w-2/3 lg:ml-8">
-            <h1 className="text-4xl font-semibold mb-4">
-              {TvShowsDetails.name || "Loading..."}
+          <div className="md:w-1/2 lg:w-3/4">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              {TvShowsDetails.name}
             </h1>
-            <p className="text-gray-400 text-sm mb-2">
-              {TvShowsDetails.genres?.map((elem) => elem.name).join(", ")}
-            </p>
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="text-2xl font-semibold">
-                {Math.floor(TvShowsDetails.vote_average * 10)}
-                <sup className="text-xs">%</sup>
+            <div className="text-white text-sm mb-4">
+              {TvShowsDetails.type} <span className="mx-2">•</span>{" "}
+              {TvShowsDetails.genres?.map((elem) => elem.name).join(", ")}{" "}
+                <span className="mx-2">•</span>{" "}
+                {TvShowsDetails.status} 
+                
+              
+            </div>
+            <div className="flex items-center mb-4">
+              <div className="bg-blue-500 text-white py-2 px-4 rounded-full h-12 w-12  flex items-center font-semibold mr-4">
+                <p className="font-bold"> {Math.floor(TvShowsDetails.vote_average * 10)}</p> <sup className="font-[0.7vw]">%</sup>
               </div>
-              <h3 className="text-sm">User Score</h3>
-              <div className="flex space-x-4">
-                <div>
-                  {/* Add your icons here */}
+
+                <div className="hidden md:flex lg:flex  items-center gap-4 ">
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <BiListUl style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <AiOutlineHeart style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <BsBookmark style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <AiOutlineStar style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
                 </div>
-              </div>
+
+                <div onClick={trailerOpenHandler} className="flex pl-4 items-center hover:font-normal font-semibold cursor-pointer ">
+                  <img src="../play-button.svg" className="h-8 w-8 " alt="" /> <p className="pl-2">Play Trailer</p>
+                </div>
             </div>
-            <div className="text-gray-300 text-sm mb-4">
-              {TvShowsDetails.tagline}
-            </div>
-            <div className="text-gray-400">
-              <h3 className="text-xl font-semibold mb-2">Overview</h3>
+            <div className="mb-4 font-sans italic ">{TvShowsDetails.tagline}</div>
+            <div className="mb-4">
+              <h3 className="text-xl font-bold">Overview</h3>
               <p>{TvShowsDetails.overview}</p>
-            </div>
-            <div className="space-y-4 mt-4">
-              {crew.map((crew, index) => (
-                <div key={crew.id}>
-                  <h4 className="text-lg font-semibold">{crew.name}</h4>
-                  <p className="text-gray-400">
-                    {crew.known_for_department}
-                  </p>
-                </div>
-              ))}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div className="bg-gray-900 text-white py-8 px-4 md:py-16 md:px-24 lg:px-32 xl:px-48">
-    <div className="mb-8">
-        <h2 className="text-2xl py-5 font-semibold">Top Billed Cast</h2>
-        <div className="flex flex-nowrap overflow-x-auto">
-          {cast.map((casts, i) => (
-            <div key={cast.id} className="flex-shrink-0 mr-4">
-              <div className="bg-gray-800 rounded-lg overflow-hidden">
-                <img
-                  onError={imgErrorHandler}
-                  src={`https://image.tmdb.org/t/p/w200/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542`}
-                  alt=""
-                  className="w-32 h-40 object-cover"
-                />
-              </div>
-              <div className="p-2">
-                <h4 className="text-lg font-semibold">{casts.name}</h4>
-                <h5 className="text-gray-400 text-sm">{casts.character}</h5>
-              </div>
-            </div>
-          ))}
+    <div ref={video} className="hidden bg-opacity-100 absolute top-[55%] left-[50%] translate-x-[-50%] translate-y-[-50%] transform-[-50%]  p-10 h-[40vw] w-[90vw] items-center justify-center bg-black z-50 ">
+      <div className="flex flex-row-reverse h-[35vw] w-[85vw]  items-center justify-center ">
+        <RxCross2 className=" absolute top-0 right-0 m-2" style={{ color: 'white', fontSize: '20px' }} onClick={trailerCloseHandler} />
+        <div className="h-full w-full">
+          <iframe className="h-full w-full" onError={errorHandler} ref={iframeVideo} src={`https://www.youtube.com/embed/${trailer?.key}`} title="youtube video" allowFullScreen ></iframe>
         </div>
       </div>
     </div>
+    <div className="flex flex-col md:flex-row lg:flex-row items-start md:items-center lg:items-center flex-wrap px-8 py-6">
+      <div className=" w-full md:w-3/4 ">
+        <h2 className="text-2xl font-bold ">Top Billed Cast</h2>
+        <div className="relative w-full">
+          <div className="flex overflow-x-auto">
+            {cast.map((casts, i) => (
+              <div key={i} className=" p-2 pb-6 flex items-center ">
+                <div className="w-40 h-64 rounded-lg overflow-hidden shadow-lg  ">
+                  <div
+                    className="w-full h-44 bg-cover bg-no-repeat bg-top"
+                    style={{
+                      backgroundImage: `url('https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542')`,
+                    }}
+                  ></div>
+
+                  <div className="p-4">
+                    <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
+                    <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
+                      {casts.character}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
+        </div>
+      </div>
+      <div className="p-5 w-full md:w-[20vw]">
+        <div className="mb-5">
+          <h4 className="font-semibold">Status</h4>
+          <p>{TvShowsDetails.status}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Original Title</h4>
+          <p>{TvShowsDetails.original_name}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Total seasons</h4>
+          <p>{TvShowsDetails.number_of_seasons}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Last Air Date</h4>
+          <p>{ TvShowsDetails.last_air_date}</p>
+        </div>
+      </div>
+    </div>
+
   </>
   );
 };

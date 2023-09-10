@@ -3,12 +3,15 @@ import axios from "axios";
 import { asyncGetMoviesDetails } from "@/store/Actions/moviesAction";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import YouTubeIframeLoader from "youtube-iframe";
+import { BiListUl } from "react-icons/bi";
+import { AiOutlineHeart } from "react-icons/ai";
+import { BsBookmark } from "react-icons/bs";
+import { AiOutlineStar } from "react-icons/ai";
+import { RxCross2 } from "react-icons/rx";
 
 const Page = (props) => {
   const [crew, setcrew] = useState([]);
   const [cast, setcast] = useState([]);
-
   const video = useRef(null);
   const iframeVideo = useRef(null);
 
@@ -20,9 +23,7 @@ const Page = (props) => {
   useEffect(() => {
     dispatch(asyncGetMoviesDetails(movieId));
     castNcrew();
-  }, []);
-
-  // convert minutes into hours
+  }, [movieId]);
 
   const convertToHoursMinutes = (minutes) => {
     const hours = Math.floor(minutes / 60);
@@ -38,18 +39,13 @@ const Page = (props) => {
 
   const trailerCloseHandler = () => {
     video.current.style.display = "none";
-    iframeVideo.current.src = "#";
+    iframeVideo.current.src = " ";
   };
 
   const errorHandler = () => {
     iframeVideo.current.style.display = "none";
   };
 
-  const imgErrorHandler = (e) => {
-    e.target.style.display = "none";
-  };
-
-  // crew and cast data
 
   const castNcrew = async () => {
     const { data } = await axios.get(
@@ -64,47 +60,64 @@ const Page = (props) => {
   return (
     <>
       <div
-        className="relative bg-cover bg-center"
+        className="relative bg-cover bg-center h-1/2 md:h-screen"
         style={{
           backgroundImage: `url('https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${MovieDetails.backdrop_path}?api_key=11eafabab15fc91d50417227c788a542')`,
         }}
       >
-        <div className="bg-black bg-opacity-70 text-white py-4">
+        <div className="bg-black bg-opacity-70 text-white flex items-center justify-center px-5 md:px-10 h-1/2 md:h-screen">
           <div className="container mx-auto flex flex-col md:flex-row gap-4">
-            <div className="md:w-1/4">
+            <div className="pt-2 w-2/4 md:w-1/2 lg:w-1/4">
               <img
                 src={`https://image.tmdb.org/t/p/w500//${MovieDetails.poster_path}?api_key=11eafabab15fc91d50417227c788a542`}
                 alt=""
                 className="w-full h-auto rounded-lg"
               />
             </div>
-            <div className="md:w-3/4">
+            <div className="md:w-1/2 lg:w-3/4">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {MovieDetails.title}
               </h1>
-              <div className="text-gray-400 text-sm mb-4">
-                {MovieDetails.release_date} <span className="mx-2">&#183;</span>{" "}
+              <div className="text-white text-sm mb-4">
+                {MovieDetails.release_date} <span className="mx-2">•</span>{" "}
                 {MovieDetails.genres?.map((elem) => elem.name).join(", ")}{" "}
-                <span className="mx-2">&#183;</span>{" "}
+                <span className="mx-2">•</span>{" "}
                 {convertToHoursMinutes(MovieDetails.runtime)}
               </div>
               <div className="flex items-center mb-4">
-                <div className="bg-blue-500 text-white py-2 px-4 rounded-md font-semibold mr-4">
-                  {Math.floor(MovieDetails.vote_average * 10)} <sup>%</sup>
+                <div className="bg-blue-500 text-white py-2 px-4 rounded-full h-12 w-12  flex items-center font-semibold mr-4">
+                  <p className="font-bold"> {Math.floor(MovieDetails.vote_average * 10)}</p> <sup className="font-[0.7vw]">%</sup>
                 </div>
-                {/* Rest of the icons */}
+
+                  <div className="hidden md:flex lg:flex  items-center gap-4 ">
+                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                      <BiListUl style={{ color: 'white', fontSize: '20px' }} />
+                    </div>
+                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                      <AiOutlineHeart style={{ color: 'white', fontSize: '20px' }} />
+                    </div>
+                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                      <BsBookmark style={{ color: 'white', fontSize: '20px' }} />
+                    </div>
+                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                      <AiOutlineStar style={{ color: 'white', fontSize: '20px' }} />
+                    </div>
+                  </div>
+
+                  <div onClick={trailerOpenHandler} className="flex pl-4 items-center hover:font-normal font-semibold cursor-pointer ">
+                    <img src="../play-button.svg" className="h-8 w-8 " alt="" /> <p className="pl-2">Play Trailer</p>
+                  </div>
               </div>
-              <div className="mb-4">{MovieDetails.tagline}</div>
+              <div className="mb-4 font-sans italic ">{MovieDetails.tagline}</div>
               <div className="mb-4">
-                <h3 className="text-xl font-semibold">Overview</h3>
+                <h3 className="text-xl font-bold">Overview</h3>
                 <p>{MovieDetails.overview}</p>
               </div>
               <div className="mb-4">
-                <h2 className="text-xl font-semibold">Crew</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {crew.map((crew, index) => (
-                    <div key={crew.id}>
-                      <h4 className="font-semibold">{crew.name}</h4>
+                    <div key={index}>
+                      <h4 className="font-bold">{crew.name}</h4>
                       <p>{crew.job}</p>
                     </div>
                   ))}
@@ -114,54 +127,62 @@ const Page = (props) => {
           </div>
         </div>
       </div>
-      <div ref={video} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50 ">
-        <div className="relative w-full h-0 pb-9/16">
-          {/* Rest of the code for the video player */}
+      <div ref={video} className="hidden bg-opacity-100 absolute top-[55%] left-[50%] translate-x-[-50%] translate-y-[-50%] transform-[-50%]  p-10 h-[40vw] w-[90vw] items-center justify-center bg-black z-50 ">
+        <div className="flex flex-row-reverse h-[35vw] w-[85vw]  items-center justify-center ">
+          <RxCross2 className=" absolute top-0 right-0 m-2" style={{ color: 'white', fontSize: '20px' }} onClick={trailerCloseHandler} />
+          <div className="h-full w-full">
+            <iframe className="h-full w-full" onError={errorHandler} ref={iframeVideo} src={`https://www.youtube.com/embed/${trailer?.key}`} title="youtube video" allowFullScreen ></iframe>
+          </div>
         </div>
       </div>
-      <div className="bg-gray-900 p-5 overflow-x-auto flex flex-wrap text-white py-8">
-        <div className="container mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl py-5 font-semibold">Top Billed Cast</h2>
-            <div className="flex flex-nowrap overflow-x-auto">
+      <div className="flex flex-col md:flex-row lg:flex-row items-start md:items-center lg:items-center flex-wrap px-8 py-6">
+        <div className=" w-full md:w-3/4 ">
+          <h2 className="text-2xl font-bold ">Top Billed Cast</h2>
+          <div className="relative w-full">
+            <div className="flex overflow-x-auto">
               {cast.map((casts, i) => (
-                <div key={cast.id} className="flex-shrink-0 mr-4">
-                  <div className="bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      onError={imgErrorHandler}
-                      src={`https://image.tmdb.org/t/p/w200/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542`}
-                      alt=""
-                      className="w-32 h-40 object-cover"
-                    />
-                  </div>
-                  <div className="p-2">
-                    <h4 className="text-lg font-semibold">{casts.name}</h4>
-                    <h5 className="text-gray-400 text-sm">{casts.character}</h5>
+                <div key={i} className=" p-2 pb-6 flex items-center ">
+                  <div className="w-40 h-64 rounded-lg overflow-hidden shadow-lg  ">
+                    <div
+                      className="w-full h-44 bg-cover bg-no-repeat bg-top"
+                      style={{
+                        backgroundImage: `url('https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542')`,
+                      }}
+                    ></div>
+
+                    <div className="p-4">
+                      <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
+                      <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
+                        {casts.character}
+                      </h5>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
+            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="mb-4 sm:mb-0">
-              <div className="font-semibold">Original Title</div>
-              <p>{MovieDetails.original_title}</p>
-            </div>
-            <div className="mb-4 sm:mb-0">
-              <div className="font-semibold">Status</div>
-              <p>{MovieDetails.status}</p>
-            </div>
-            <div className="mb-4 sm:mb-0">
-              <div className="font-semibold">Budget</div>
-              <p>{"$ " + MovieDetails.budget}</p>
-            </div>
-            <div className="mb-4 sm:mb-0">
-              <div className="font-semibold">Revenue</div>
-              <p>{"$ " + MovieDetails.revenue}</p>
-            </div>
+        </div>
+        <div className="p-5 w-full md:w-[20vw]">
+          <div className="mb-5">
+            <h4 className="font-semibold">Status</h4>
+            <p>{MovieDetails.status}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Original Title</h4>
+            <p>{MovieDetails.original_title}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Budget</h4>
+            <p>{"$ " + MovieDetails.budget}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Revenue</h4>
+            <p>{"$ " + MovieDetails.revenue}</p>
           </div>
         </div>
       </div>
+
     </>
   );
 };
