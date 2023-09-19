@@ -37,39 +37,40 @@ const MovieCard = ({ movie }) => {
 
     return (
         <>
-            {movie.length != 0 ?
+        {movie.poster_path ? (
+            <div key={movie.id} className="relative bg-gray-100 rounded-lg shadow-md">
+                <div className='relative'>
+                    <Link href={`/movie/${movie.id}`}>
+                        <img
+                            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}?api_key=11eafabab15fc91d50417227c788a542`}
+                            alt=""
+                            className="w-full h-auto rounded-t-lg"
+                        />
+                    </Link>
 
-                <div key={movie.id} className="relative bg-gray-100 rounded-lg shadow-md">
-                    <div className='relative'>
-                        <Link href={`/movie/${movie.id}`}>
-                            <img
-                                src={`https://image.tmdb.org/t/p/w500//${movie.poster_path}?api_key=11eafabab15fc91d50417227c788a542`}
-                                alt=""
-                                className="w-full h-auto rounded-t-lg"
-                            />
-                        </Link>
-
-                        <div className='bg-black absolute -bottom-6 left-4 rounded-full  h-10 w-10 flex items-center justify-center text-white p-3 '>
-                            <Progress progress={Math.floor(movie.vote_average * 10)} />
-                            <p className='font-bold'>{Math.floor(movie.vote_average * 10)}</p> <sup className=' text-[0.9vw]'>%</sup>
+                    <div className='bg-black absolute -bottom-6 left-4 rounded-full  h-10 w-10 flex items-center justify-center text-white p-3 '>
+                        <Progress progress={Math.floor(movie.vote_average * 10)} />
+                        <p className='font-bold'>{Math.floor(movie.vote_average * 10)}</p> <sup className=' text-[0.9vw]'>%</sup>
+                    </div>
+                </div>
+                <div className="p-4 mt-4">
+                    <Link href={`/movie/${movie.id}`}>
+                        <div className="text-lg font-semibold text-black hover:text-blue-400 overflow-hidden" style={{ maxWidth: '250px', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                            {movie.title}
                         </div>
-                    </div>
-                    <div className="p-4 mt-4">
-                        <Link href={`/movie/${movie.id}`}>
-                            <div className="text-lg font-semibold text-black  hover:text-blue-400">
-                                {movie.title}
-                            </div>
-                        </Link>
-                        <p className="text-gray-600"> {/* Changed text color */}
-                            {convertNumericToDate(movie.release_date)}
-                        </p>
-                    </div>
+                    </Link>
+                    <p className="text-gray-600">
+                        {convertNumericToDate(movie.release_date)}
+                    </p>
                 </div>
-                : <div class="animate-pulse space-y-2 h-64 ">
-                    <div class="bg-gray-200  h-72 "></div>
-                </div>
-            }
-        </>
+            </div>
+        ) : (
+            <div className="animate-pulse space-y-2 h-64">
+                <div className="bg-gray-200 h-72"></div>
+            </div>
+        )}
+    </>
+
 
     )
 }

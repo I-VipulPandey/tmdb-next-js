@@ -8,7 +8,6 @@ import { removeerrors } from "@/store/Reducers/movieReducer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
 
@@ -22,17 +21,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  if (errors.length > 0) {
-    errors.map((e, i) => {
-      toast.error(e);
-    });
-    dispatch(removeerrors());
-  }
-
-
-
-
-  useEffect(() => {
+    useEffect(() => {
 
     dispatch(asyncGetTrendingMovies()).then(() => {
 

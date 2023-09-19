@@ -22,12 +22,9 @@ const Page = (props) => {
 
   useEffect(() => {
     dispatch(asyncGetMoviesDetails(movieId));
-    castNcrew();
-  }, [movieId]);
-
-  useEffect(() => {
     dispatch(asyncSimilarMovies(movieId));
 
+    castNcrew();
   }, [movieId]);
 
   const convertToHoursMinutes = (minutes) => {
@@ -79,7 +76,7 @@ const Page = (props) => {
                 className="w-full h-auto rounded-lg"
               />
             </div>
-            <div className="md:w-1/2 lg:w-3/4">
+            <div className="md:w-1/2 lg:w-3/4 pl-10">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {MovieDetails.title}
               </h1>
@@ -148,56 +145,75 @@ const Page = (props) => {
               {cast.map((casts, i) => (
                 <div key={i} className=" p-2 pb-6 flex items-center ">
                   <div className="w-40 h-64 rounded-lg overflow-hidden shadow-lg  ">
-                    <div
-                      className="w-full h-44 bg-cover bg-no-repeat bg-top"
-                      style={{
-                        backgroundImage: `url(https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542)` 
-                          
-                      }}
-                    ></div>
+                    {casts.profile_path ? (
+                      <div
+                        className="w-full h-44 bg-cover bg-no-repeat bg-top"
+                        style={{
+                          backgroundImage: `url(https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542)`
+                        }}
+                      ></div>
+                    ) : (
+                      <div className="w-full h-44 flex items-center justify-center bg-gray-200">
+                        <img src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" alt="" />
+                      </div>
+                    )}
 
-                  <div className="p-4">
-                    <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
-                    <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
-                      {casts.character}
-                    </h5>
+
+
+                    <div className="p-4">
+                      <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
+                      <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
+                        {casts.character}
+                      </h5>
+                    </div>
                   </div>
                 </div>
-                </div>
               ))}
+            </div>
+            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
           </div>
-          <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
         </div>
-      </div>
-      <div className="p-5 w-full md:w-[20vw]">
-        <div className="mb-5">
-          <h4 className="font-semibold">Status</h4>
-          <p>{MovieDetails.status}</p>
+        <div className="p-5 w-full md:w-[20vw]">
+          <div className="mb-5">
+            <h4 className="font-semibold">Status</h4>
+            <p>{MovieDetails.status}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Original Title</h4>
+            <p>{MovieDetails.original_title}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Budget</h4>
+            <p>{"$ " + MovieDetails.budget}</p>
+          </div>
+          <div className="mb-5">
+            <h4 className="font-semibold">Revenue</h4>
+            <p>{"$ " + MovieDetails.revenue}</p>
+          </div>
         </div>
-        <div className="mb-5">
-          <h4 className="font-semibold">Original Title</h4>
-          <p>{MovieDetails.original_title}</p>
-        </div>
-        <div className="mb-5">
-          <h4 className="font-semibold">Budget</h4>
-          <p>{"$ " + MovieDetails.budget}</p>
-        </div>
-        <div className="mb-5">
-          <h4 className="font-semibold">Revenue</h4>
-          <p>{"$ " + MovieDetails.revenue}</p>
-        </div>
-      </div>
-    </div >
-    {/* <div className="container mx-auto mt-12 p-10 mb-10">
+      </div >
+      <div className="container mx-auto p-10 ">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Similar Movies</h2>
         </div>
 
         <div
-          className="mt-4 overflow-x-auto"  >
-
+          className="mt-4 overflow-x-auto flex flex-row"
+        >
+          {similar.length > 0 ? (
+            similar.map((movie, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 md:max-w-[18vw] ml-5"
+              >
+                <MovieCard movie={movie} />
+              </div>
+            ))
+          ) : (
+            <p>No similar movies found. Similar movies will be updated soon.</p>
+          )}
         </div>
-      </div> */}
+      </div>
     </>
   );
 };

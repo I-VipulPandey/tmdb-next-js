@@ -20,7 +20,7 @@ const Page = ({ params }) => {
     <>
           <div className="container mx-auto mt-12 px-10 mb-10 ">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">Popular TV Show</h2>
+          <h2 className="text-2xl font-semibold"> TV Show</h2>
         </div>
 
 
