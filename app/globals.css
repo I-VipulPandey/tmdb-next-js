@@ -17,3 +17,19 @@
 }
 
 
+body{
+
+  ::-webkit-scrollbar {
+    width: 0.1em; /* This width is set to a very small value to effectively hide it */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Make the scrollbar track transparent */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: transparent; /* Make the scrollbar thumb (the draggable part) transparent */
+  }
+
+
+}

@@ -1,6 +1,6 @@
 "use client"
 import axios from "axios";
-import { asyncGetMoviesDetails } from "@/store/Actions/moviesAction";
+import { asyncGetMoviesDetails, asyncSimilarMovies } from "@/store/Actions/moviesAction";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BiListUl } from "react-icons/bi";
@@ -8,7 +8,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
-
+import MovieCard from "@/components/MovieCard";
 const Page = (props) => {
   const [crew, setcrew] = useState([]);
   const [cast, setcast] = useState([]);
@@ -16,13 +16,18 @@ const Page = (props) => {
   const iframeVideo = useRef(null);
 
   const { movieId } = props.params;
-  const { MovieDetails } = useSelector((state) => state.movieReducer);
+  const { MovieDetails, similar } = useSelector((state) => state.movieReducer);
   const trailer = MovieDetails.videos?.results.find((video) => video.type === "Trailer");
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(asyncGetMoviesDetails(movieId));
     castNcrew();
+  }, [movieId]);
+
+  useEffect(() => {
+    dispatch(asyncSimilarMovies(movieId));
+
   }, [movieId]);
 
   const convertToHoursMinutes = (minutes) => {
@@ -89,24 +94,24 @@ const Page = (props) => {
                   <p className="font-bold"> {Math.floor(MovieDetails.vote_average * 10)}</p> <sup className="font-[0.7vw]">%</sup>
                 </div>
 
-                  <div className="hidden md:flex lg:flex  items-center gap-4 ">
-                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
-                      <BiListUl style={{ color: 'white', fontSize: '20px' }} />
-                    </div>
-                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
-                      <AiOutlineHeart style={{ color: 'white', fontSize: '20px' }} />
-                    </div>
-                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
-                      <BsBookmark style={{ color: 'white', fontSize: '20px' }} />
-                    </div>
-                    <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
-                      <AiOutlineStar style={{ color: 'white', fontSize: '20px' }} />
-                    </div>
+                <div className="hidden md:flex lg:flex  items-center gap-4 ">
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <BiListUl style={{ color: 'white', fontSize: '20px' }} />
                   </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <AiOutlineHeart style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <BsBookmark style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                  <div className="p-4 h-12 w-12 flex items-center justify-center bg-[#032541] rounded-full ">
+                    <AiOutlineStar style={{ color: 'white', fontSize: '20px' }} />
+                  </div>
+                </div>
 
-                  <div onClick={trailerOpenHandler} className="flex pl-4 items-center hover:font-normal font-semibold cursor-pointer ">
-                    <img src="../play-button.svg" className="h-8 w-8 " alt="" /> <p className="pl-2">Play Trailer</p>
-                  </div>
+                <div onClick={trailerOpenHandler} className="flex pl-4 items-center hover:font-normal font-semibold cursor-pointer ">
+                  <img src="../play-button.svg" className="h-8 w-8 " alt="" /> <p className="pl-2">Play Trailer</p>
+                </div>
               </div>
               <div className="mb-4 font-sans italic ">{MovieDetails.tagline}</div>
               <div className="mb-4">
@@ -146,43 +151,53 @@ const Page = (props) => {
                     <div
                       className="w-full h-44 bg-cover bg-no-repeat bg-top"
                       style={{
-                        backgroundImage: `url('https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542')`,
+                        backgroundImage: `url(https://image.tmdb.org/t/p/w500/${casts.profile_path}?api_key=11eafabab15fc91d50417227c788a542)` 
+                          
                       }}
                     ></div>
 
-                    <div className="p-4">
-                      <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
-                      <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
-                        {casts.character}
-                      </h5>
-                    </div>
+                  <div className="p-4">
+                    <h4 className="text-lg font-semibold truncate">{casts.name}</h4>
+                    <h5 className="text-gray-400 whitespace-nowrap overflow-hidden truncate">
+                      {casts.character}
+                    </h5>
                   </div>
                 </div>
+                </div>
               ))}
-            </div>
-            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
           </div>
-        </div>
-        <div className="p-5 w-full md:w-[20vw]">
-          <div className="mb-5">
-            <h4 className="font-semibold">Status</h4>
-            <p>{MovieDetails.status}</p>
-          </div>
-          <div className="mb-5">
-            <h4 className="font-semibold">Original Title</h4>
-            <p>{MovieDetails.original_title}</p>
-          </div>
-          <div className="mb-5">
-            <h4 className="font-semibold">Budget</h4>
-            <p>{"$ " + MovieDetails.budget}</p>
-          </div>
-          <div className="mb-5">
-            <h4 className="font-semibold">Revenue</h4>
-            <p>{"$ " + MovieDetails.revenue}</p>
-          </div>
+          <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-r from-transparent to-white pointer-events-none"></div>
         </div>
       </div>
+      <div className="p-5 w-full md:w-[20vw]">
+        <div className="mb-5">
+          <h4 className="font-semibold">Status</h4>
+          <p>{MovieDetails.status}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Original Title</h4>
+          <p>{MovieDetails.original_title}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Budget</h4>
+          <p>{"$ " + MovieDetails.budget}</p>
+        </div>
+        <div className="mb-5">
+          <h4 className="font-semibold">Revenue</h4>
+          <p>{"$ " + MovieDetails.revenue}</p>
+        </div>
+      </div>
+    </div >
+    {/* <div className="container mx-auto mt-12 p-10 mb-10">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold">Similar Movies</h2>
+        </div>
 
+        <div
+          className="mt-4 overflow-x-auto"  >
+
+        </div>
+      </div> */}
     </>
   );
 };

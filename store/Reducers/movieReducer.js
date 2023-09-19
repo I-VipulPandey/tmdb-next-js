@@ -5,6 +5,7 @@ const initialState = {
   TrendingMovies: [],
   MovieDetails: {},
   errors: [],
+  similar:[],
   page: 1,
 };
 
@@ -17,6 +18,9 @@ export const MovieReducer = createSlice({
     },
     saveTrendingMovies: (state, action) => {
       state.TrendingMovies = action.payload;
+    },
+    saveSimilarMovies: (state, action) => {
+      state.similar = action.payload;
     },
     saveMovieDetails: (state, action) => {
       state.MovieDetails = action.payload;
@@ -41,6 +45,7 @@ export const {
   removeerrors,
   RemoveMovies,
   changePage,
+  saveSimilarMovies
 } = MovieReducer.actions;
 
 export default MovieReducer.reducer;
