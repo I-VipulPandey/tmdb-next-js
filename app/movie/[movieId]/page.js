@@ -76,7 +76,7 @@ const Page = (props) => {
                 className="w-full h-auto rounded-lg"
               />
             </div>
-            <div className="md:w-1/2 lg:w-3/4 pl-10">
+            <div className="md:w-1/2 lg:w-3/4 md:pl-10 p-5">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 {MovieDetails.title}
               </h1>
@@ -88,7 +88,7 @@ const Page = (props) => {
               </div>
               <div className="flex items-center mb-4">
                 <div className="bg-blue-500 text-white py-2 px-4 rounded-full h-12 w-12  flex items-center font-semibold mr-4">
-                  <p className="font-bold"> {Math.floor(MovieDetails.vote_average * 10)}</p> <sup className="font-[0.7vw]">%</sup>
+                  <p className="font-bold"> {Math.floor(MovieDetails.vote_average * 10)}</p> <em className=' text-[0.7vw] top-4   right-1'>%</em>
                 </div>
 
                 <div className="hidden md:flex lg:flex  items-center gap-4 ">
@@ -192,28 +192,31 @@ const Page = (props) => {
           </div>
         </div>
       </div >
-      <div className="container mx-auto p-10 ">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">Similar Movies</h2>
-        </div>
+      <div className="container mx-auto p-4 md:p-10">
+  <div className="flex flex-col md:flex-row justify-between items-center">
+    <h2 className="text-xl md:text-2xl font-semibold">Similar Movies</h2>
+  </div>
 
+  <div
+    className="mt-4 overflow-x-auto flex flex-col md:flex-row"
+  >
+    {similar.length > 0 ? (
+      similar.map((movie, index) => (
         <div
-          className="mt-4 overflow-x-auto flex flex-row"
+          key={index}
+          className="flex-shrink-0 w-full md:w-[18vw] ml-0 md:ml-5 mb-5 md:mb-0"
         >
-          {similar.length > 0 ? (
-            similar.map((movie, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 md:max-w-[18vw] ml-5"
-              >
-                <MovieCard movie={movie} />
-              </div>
-            ))
-          ) : (
-            <p>No similar movies found. Similar movies will be updated soon.</p>
-          )}
+          <MovieCard movie={movie} />
         </div>
-      </div>
+      ))
+    ) : (
+      <p className="mt-2 text-center md:text-left">
+        No similar movies found. Similar movies will be updated soon.
+      </p>
+    )}
+  </div>
+</div>
+
     </>
   );
 };

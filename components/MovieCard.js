@@ -50,7 +50,7 @@ const MovieCard = ({ movie }) => {
 
                     <div className='bg-black absolute -bottom-6 left-4 rounded-full  h-10 w-10 flex items-center justify-center text-white p-3 '>
                         <Progress progress={Math.floor(movie.vote_average * 10)} />
-                        <p className='font-bold'>{Math.floor(movie.vote_average * 10)}</p> <sup className=' text-[0.9vw]'>%</sup>
+                        <p className='font-bold'>{Math.floor(movie.vote_average * 10)}</p> <em className='absolute text-[0.7vw] top-4   right-1'>%</em>
                     </div>
                 </div>
                 <div className="p-4 mt-4">
