@@ -3,7 +3,7 @@ import Wrapper from '@/components/wrapper/wrapper'
 import './globals.css'
 
 export const metadata = {
-  title: 'TMDB',
+  title: 'ScreenGaze',
   description: 'TMDB clone by vipul',
 }
 
